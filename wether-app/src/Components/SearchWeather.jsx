@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import "./Weather.css"; 
+import "./Weather.css";
 
 export default function SearchWeather() {
   const [city, setCity] = useState("");
-  const [days, setDays] = useState(1); // NEW: default to 1 day
+  const [days, setDays] = useState(1);
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,6 +19,11 @@ export default function SearchWeather() {
       setError("Please enter a city name");
       return;
     }
+    if (!days || days <= 0) {
+      setError("Please enter valid number of days");
+      return;
+    }
+
     setError("");
     setLoading(true);
     setWeather(null);
@@ -37,64 +42,77 @@ export default function SearchWeather() {
     }
   };
 
-  const getBackground = () => {
-    if (!weather) return "url('https://source.unsplash.com/1600x900/?nature,sky')";
-    const condition = weather.weatherResponse.condition.toLowerCase();
-    if (condition.includes("cloud")) return "url('https://source.unsplash.com/1600x900/?cloudy')";
-    if (condition.includes("rain")) return "url('https://source.unsplash.com/1600x900/?rain')";
-    if (condition.includes("sun") || condition.includes("clear")) return "url('https://source.unsplash.com/1600x900/?sunny')";
-    return "url('https://source.unsplash.com/1600x900/?weather')";
-  };
-
   return (
-    <div className="weather-app" style={{ backgroundImage: getBackground() }}>
+    <div className="weather-container">
       {showWelcome ? (
         <div className="welcome-screen">
           <h1>🌤️ Welcome to Weather App!</h1>
           <p>Get instant forecasts of your city</p>
         </div>
       ) : (
-        <div className="content">
-          <h2>Weather App</h2>
-          <input
-            type="text"
-            placeholder="Enter city"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
-          <div className="days-selector">
-            <button onClick={() => setDays(1)} className={days === 1 ? "active" : ""}>1 Day</button>
-            <button onClick={() => setDays(2)} className={days === 2 ? "active" : ""}>2 Days</button>
-            <button onClick={() => setDays(3)} className={days === 3 ? "active" : ""}>3 Days</button>
+        <div className="weather-content">
+          {/* Search Bar */}
+          <div className="search-bar">
+            <input
+              type="text"
+              placeholder="Enter city"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
+            <input
+              type="number"
+              min="1"
+              max="10"
+              placeholder="Days"
+              value={days}
+              onChange={(e) => setDays(Number(e.target.value))}
+            />
+            <button onClick={handleSearch}>Search</button>
           </div>
-          <button onClick={handleSearch}>Search</button>
 
           {error && <p className="error">{error}</p>}
-
-          {loading && (
-            <div className="loader">
-              <div className="spinner"></div>
-              <p>Fetching weather...</p>
-            </div>
-          )}
+          {loading && <p>Loading weather...</p>}
 
           {weather && !loading && (
-            <div className="weather-card fade-in">
-              <h3>
-                {weather.weatherResponse.city},{" "}
-                {weather.weatherResponse.country}
-              </h3>
-              <p>Condition: {weather.weatherResponse.condition}</p>
-              <p>Temperature: {weather.weatherResponse.temperature} °C</p>
+            <div className="weather-card">
+              {/* Current Weather */}
+              <div className="current-weather">
+                <h2>{weather.weatherResponse.city}</h2>
+                <h1>{weather.weatherResponse.temperature}°C</h1>
+                <p>{weather.weatherResponse.condition}</p>
+                <p className="feels">
+                  Feels like {weather.weatherResponse.temperature}°C
+                </p>
+              </div>
 
-              <h4>Daily Forecast:</h4>
-              {weather.dayTemp.map((day, index) => (
-                <div key={index} className="forecast-day">
-                  <p>{day.date}</p>
-                  <p>🌡️ Avg: {day.avgTemp} °C</p>
-                  <p>⬆️ Max: {day.maxTemp} °C | ⬇️ Min: {day.minTemp} °C</p>
+              {/* Hourly Forecast */}
+              <div className="hourly-forecast">
+                <h3>Hourly forecast</h3>
+                <div className="hourly-scroll">
+                  {weather.hourlyTemp &&
+                    weather.hourlyTemp.map((h, index) => (
+                      <div key={index} className="hour-card">
+                        <p>{h.time}</p>
+                        <p>{h.temp}°C</p>
+                        <span>{h.condition}</span>
+                      </div>
+                    ))}
                 </div>
-              ))}
+              </div>
+
+              {/* Daily Forecast */}
+              <div className="daily-forecast">
+                <h3>{days}-Day Forecast</h3>
+                {weather.dayTemp.map((day, index) => (
+                  <div key={index} className="day-card">
+                    <p>{day.date}</p>
+                    <p>{day.avgTemp}°C</p>
+                    <p>
+                      ⬆ {day.maxTemp}°C | ⬇ {day.minTemp}°C
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

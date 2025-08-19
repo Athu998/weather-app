@@ -1,115 +1,94 @@
-.weather-app {
-  height: 100vh;
-  background-size: cover;
-  background-position: center;
-  text-align: center;
-  color: white;
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(to bottom, #1e3c72, #2a5298);
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+.weather-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  transition: background-image 1s ease-in-out;
+  align-items: flex-start;
+  padding: 30px;
 }
 
-.content {
-  background: rgba(0, 0, 0, 0.6);
-  padding: 20px;
+.weather-content {
+  width: 400px;
+  background: rgba(0, 0, 0, 0.4);
   border-radius: 16px;
-  animation: fadeIn 1s ease-in-out;
+  padding: 20px;
+  backdrop-filter: blur(10px);
 }
 
-input {
+.search-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-bar input,
+.search-bar button {
   padding: 8px;
   border-radius: 8px;
   border: none;
-  margin-right: 10px;
 }
 
-button {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 8px;
-  background: #ff9800;
+.search-bar button {
+  background: #00aaff;
   color: white;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-button:hover {
-  background: #e68900;
+.weather-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.error {
-  color: red;
-  margin-top: 10px;
-}
-
-/* Loader Animation */
-.loader {
-  margin-top: 20px;
-}
-
-.spinner {
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid #fff;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  margin: auto;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-
-.fade-in {
-  animation: fadeIn 1s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Welcome Screen */
-.welcome-screen {
+.current-weather {
   text-align: center;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 40px;
-  border-radius: 20px;
-  animation: fadeIn 1.5s ease-in-out;
 }
 
-.days-selector {
+.current-weather h1 {
+  font-size: 48px;
   margin: 10px 0;
 }
 
-.days-selector button {
-  margin: 0 5px;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 5px;
-  background: #eee;
-  cursor: pointer;
-  transition: background 0.3s;
+.feels {
+  font-size: 14px;
+  color: #ddd;
 }
 
-.days-selector button:hover {
-  background: #ddd;
+.hourly-forecast {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px;
 }
 
-.days-selector .active {
-  background: #007bff;
-  color: white;
-  font-weight: bold;
+.hourly-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
 }
 
+.hour-card {
+  min-width: 70px;
+  text-align: center;
+}
+
+.daily-forecast {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.day-card {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.day-card:last-child {
+  border-bottom: none;
+}
